@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberGuard Intelligence — Enterprise SOC & Threat Platform</title>
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<div class="app-container">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo-badge">CG</div>
+            <div class="logo-text">
+                <h2>CyberGuard</h2>
+                <p>Intelligence Platform</p>
+            </div>
+        </div>
+        <nav class="sidebar-nav">
+            <a class="nav-item active" data-target="dashboard"><i class="fa-solid fa-chart-pie"></i><span>Dashboard</span></a>
+            <a class="nav-item" data-target="company-intelligence"><i class="fa-solid fa-building-shield"></i><span>Company Intelligence</span></a>
+            <a class="nav-item" data-target="threat-intelligence"><i class="fa-solid fa-shield-halved"></i><span>Threat Intelligence</span></a>
+            <a class="nav-item" data-target="data-breaches"><i class="fa-solid fa-database"></i><span>Data Breaches</span></a>
+            <a class="nav-item" data-target="vulnerabilities"><i class="fa-solid fa-bug"></i><span>Vulnerabilities</span></a>
+            <a class="nav-item" data-target="security-analytics"><i class="fa-solid fa-chart-line"></i><span>Security Analytics</span></a>
+            <a class="nav-item" data-target="reports"><i class="fa-solid fa-file-shield"></i><span>Reports</span></a>
+            <a class="nav-item" data-target="about-us"><i class="fa-solid fa-circle-info"></i><span>About Us</span></a>
+            <a class="nav-item" data-target="settings"><i class="fa-solid fa-gear"></i><span>Settings</span></a>
+        </nav>
+        <div class="sidebar-footer">
+            <p>SOC v4.2.0 • Secured</p>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        <!-- TOP NAVBAR -->
+        <header class="top-navbar">
+            <div class="search-container">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="global-search-input" placeholder="Search companies, threats, CVEs, reports...">
+                <div class="global-search-results" id="global-search-results"></div>
+            </div>
+            <div class="navbar-right">
+                <div class="system-status">
+                    <div class="status-dot"></div>
+                    <span>SYSTEM OPERATIONAL</span>
+                </div>
+                <div class="notification-wrapper">
+                    <div class="icon-btn" id="notif-toggle-btn">
+                        <i class="fa-regular fa-bell"></i>
+                        <span class="notification-badge" id="notif-count">5</span>
+                    </div>
+                    <!-- Notification Dropdown -->
+                    <div class="notification-dropdown" id="notification-dropdown">
+                        <div class="notif-header">
+                            <h4>Security Notifications</h4>
+                            <span id="mark-all-read">Mark all as read</span>
+                        </div>
+                        <div class="notif-body" id="notif-list">
+                            <!-- Populated via JS -->
+                        </div>
+                    </div>
+                </div>
+                <div class="user-profile">
+                    <div class="user-avatar">SA</div>
+                    <div class="user-info">
+                        <h4>SecOps Admin</h4>
+                        <p>Tier-3 Analyst</p>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- CONTENT BODY -->
+        <div class="content-body">
+
+            <!-- 1. DASHBOARD SECTION -->
+            <section id="dashboard" class="app-section active">
+                <div class="section-header">
+                    <h1>Security Operations Center</h1>
+                    <p>Real-time telemetry, threat posture, and infrastructure oversight.</p>
+                </div>
+
+                <div class="dashboard-grid" id="stat-cards-grid">
+                    <!-- Populated via JS -->
+                </div>
+
+                <div class="charts-row">
+                    <div class="glass-panel">
+                        <div class="panel-header">
+                            <h3>Threat Activity Trend</h3>
+                            <div class="panel-actions">
+                                <button class="btn-filter active" onclick="updateThreatChart('7')">7 Days</button>
+                                <button class="btn-filter" onclick="updateThreatChart('30')">30 Days</button>
+                                <button class="btn-filter" onclick="updateThreatChart('90')">90 Days</button>
+                            </div>
+                        </div>
+                        <canvas id="threatActivityChart" height="110"></canvas>
+                    </div>
+
+                    <div class="glass-panel">
+                        <div class="panel-header">
+                            <h3>Security Risk Distribution</h3>
+                        </div>
+                        <canvas id="securityRiskChart" height="170"></canvas>
+                    </div>
+                </div>
+
+                <div class="glass-panel">
+                    <div class="panel-header">
+                        <h3>Recent Security Activity Feed</h3>
+                    </div>
+                    <div class="activity-feed" id="activity-feed-container">
+                        <!-- Populated via JS -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. COMPANY INTELLIGENCE SECTION -->
+            <section id="company-intelligence" class="app-section">
+                <div class="section-header">
+                    <h1>Company Intelligence</h1>
+                    <p>Monitor cybersecurity posture of major technology organizations.</p>
+                </div>
+
+                <div class="controls-bar">
+                    <div class="filter-group">
+                        <input type="text" id="company-search-input" class="search-box-custom" placeholder="Search company by name...">
+                        <select id="company-risk-filter" class="filter-select">
+                            <option value="all">Risk Level: All</option>
+                            <option value="Low">Low Risk</option>
+                            <option value="Medium">Medium Risk</option>
+                            <option value="High">High Risk</option>
+                            <option value="Critical">Critical Risk</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="company-grid" id="company-grid-container">
+                    <!-- 25 Companies populated via JS -->
+                </div>
+
+                <!-- Company Comparison Tool -->
+                <div class="comparison-container">
+                    <div class="panel-header">
+                        <h3>Compare Companies Side-by-Side</h3>
+                    </div>
+                    <div class="comparison-selectors">
+                        <select id="comp-select-1" class="filter-select" onchange="updateComparison()"></select>
+                        <select id="comp-select-2" class="filter-select" onchange="updateComparison()"></select>
+                    </div>
+                    <div id="comparison-result-area">
+                        <!-- Populated via JS -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. THREAT INTELLIGENCE SECTION -->
+            <section id="threat-intelligence" class="app-section">
+                <div class="section-header">
+                    <h1>Threat Intelligence Hub</h1>
+                    <p>Global threat vectors, tactics, and ongoing exploit signatures.</p>
+                </div>
+
+                <div class="dashboard-grid" id="threat-intel-grid">
+                    <!-- Populated via JS -->
+                </div>
+
+                <div class="glass-panel" style="margin-top: 2rem;">
+                    <div class="panel-header">
+                        <h3>Global Threat Activity Map (Simulated Telemetry)</h3>
+                        <span class="demo-watermark"><i class="fa-solid fa-triangle-exclamation"></i> SIMULATED THREAT ACTIVITY</span>
+                    </div>
+                    <div class="threat-map-grid" id="threat-map-container">
+                        <!-- Populated via JS -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. DATA BREACHES SECTION -->
+            <section id="data-breaches" class="app-section">
+                <div class="section-header">
+                    <h1>Data Breach Monitoring</h1>
+                    <p>Track historical and recent disclosed breach vectors across monitored sectors.</p>
+                </div>
+
+                <div class="demo-watermark">
+                    <i class="fa-solid fa-triangle-exclamation"></i> SIMULATED DEMO DATA — Never present simulated breaches as real-world verified incidents.
+                </div>
+
+                <div class="data-table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Company</th>
+                                <th>Date</th>
+                                <th>Records Affected</th>
+                                <th>Attack Type</th>
+                                <th>Severity</th>
+                                <th>Risk Score</th>
+                            </tr>
+                        </thead>
+                        <tbody id="breaches-table-body">
+                            <!-- Populated via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 5. VULNERABILITIES SECTION -->
+            <section id="vulnerabilities" class="app-section">
+                <div class="section-header">
+                    <h1>Vulnerability Monitor</h1>
+                    <p>Track zero-day exploits, CVE metrics, and remediation tracking status.</p>
+                </div>
+
+                <div class="demo-watermark">
+                    <i class="fa-solid fa-triangle-exclamation"></i> DEMO DATA — Simulated CVE tracking records.
+                </div>
+
+                <div class="data-table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>CVE ID</th>
+                                <th>CVSS Score</th>
+                                <th>Severity</th>
+                                <th>Affected Technology</th>
+                                <th>Description</th>
+                                <th>Patch Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="vuln-table-body">
+                            <!-- Populated via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 6. SECURITY ANALYTICS SECTION -->
+            <section id="security-analytics" class="app-section">
+                <div class="section-header">
+                    <h1>Security Analytics & Telemetry</h1>
+                    <p>Granular architectural scoring and threat distribution metrics.</p>
+                </div>
+
+                <div class="charts-row">
+                    <div class="glass-panel">
+                        <h3>Architectural Security Score Breakdown</h3>
+                        <canvas id="analyticsRadarChart" height="150" style="margin-top: 1rem;"></canvas>
+                    </div>
+                    <div class="glass-panel">
+                        <h3>Global Risk Tier Breakdown</h3>
+                        <canvas id="analyticsDoughnutChart" height="150" style="margin-top: 1rem;"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 7. REPORTS SECTION -->
+            <section id="reports" class="app-section">
+                <div class="section-header">
+                    <h1>Security Reports & Audits</h1>
+                    <p>Exportable executive briefings and technical compliance logs.</p>
+                </div>
+
+                <div class="reports-grid" id="reports-grid-container">
+                    <!-- Populated via JS -->
+                </div>
+            </section>
+
+            <!-- 8. ABOUT US SECTION -->
+            <section id="about-us" class="app-section">
+                <div class="section-header">
+                    <h1>About CyberGuard Intelligence</h1>
+                    <p>Enterprise-grade security intelligence concept platform.</p>
+                </div>
+
+                <div class="glass-panel" style="margin-bottom: 2rem;">
+                    <p style="font-size: 0.95rem; line-height: 1.6; color: var(--text-secondary);">
+                        CyberGuard Intelligence is a cybersecurity dashboard concept designed to demonstrate how security intelligence, company risk monitoring, vulnerability analysis and threat information can be presented through a unified interface. Suitable for professional portfolios, academic showcases, and SOC workflow prototyping.
+                    </p>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fa-solid fa-shield-cat"></i></div>
+                        <h4>Threat Intelligence</h4>
+                        <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.5rem;">Monitor cybersecurity threats and attack patterns globally.</p>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fa-solid fa-chart-line"></i></div>
+                        <h4>Risk Monitoring</h4>
+                        <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.5rem;">Analyze organization security posture with deep telemetry.</p>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fa-solid fa-bug-slash"></i></div>
+                        <h4>Vulnerability Analysis</h4>
+                        <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.5rem;">Track simulated vulnerabilities and precise severity scores.</p>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fa-solid fa-network-wired"></i></div>
+                        <h4>Security Analytics</h4>
+                        <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.5rem;">Understand security trends through advanced visual charts.</p>
+                    </div>
+                </div>
+
+                <div class="glass-panel" style="margin-top: 2rem; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                    <div>
+                        <h3 style="color: var(--accent-cyan); margin-bottom: 0.5rem;"><i class="fa-solid fa-bullseye"></i> Mission</h3>
+                        <p style="font-size: 0.9rem; color: var(--text-secondary);">"Make cybersecurity intelligence easier to understand, monitor and act upon."</p>
+                    </div>
+                    <div>
+                        <h3 style="color: var(--accent-cyan); margin-bottom: 0.5rem;"><i class="fa-solid fa-eye"></i> Vision</h3>
+                        <p style="font-size: 0.9rem; color: var(--text-secondary);">"Create smarter and more accessible security visibility for modern organizations."</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 9. SETTINGS SECTION -->
+            <section id="settings" class="app-section">
+                <div class="section-header">
+                    <h1>SOC Platform Settings</h1>
+                    <p>Customize user interface preferences and operational triggers.</p>
+                </div>
+
+                <div class="glass-panel" style="max-width: 600px;">
+                    <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <h4>Dark Mode Theme</h4>
+                                <p style="font-size: 0.75rem; color: var(--text-muted);">Enable high contrast dark navy cybersecurity look</p>
+                            </div>
+                            <input type="checkbox" id="setting-darkmode" onchange="toggleDarkMode(this.checked)" checked style="width: 18px; height: 18px; accent-color: var(--accent-cyan);">
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <h4>Compact Sidebar Mode</h4>
+                                <p style="font-size: 0.75rem; color: var(--text-muted);">Shrink sidebar navigation to icon-only view</p>
+                            </div>
+                            <input type="checkbox" id="setting-compactsidebar" onchange="toggleCompactSidebar(this.checked)" style="width: 18px; height: 18px; accent-color: var(--accent-cyan);">
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <h4>Real-time Notifications</h4>
+                                <p style="font-size: 0.75rem; color: var(--text-muted);">Receive live simulated SOC event toast popups</p>
+                            </div>
+                            <input type="checkbox" id="setting-notifications" checked style="width: 18px; height: 18px; accent-color: var(--accent-cyan);">
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <h4>Auto-Refresh Telemetry</h4>
+                                <p style="font-size: 0.75rem; color: var(--text-muted);">Periodically simulate live threat feed updates</p>
+                            </div>
+                            <input type="checkbox" id="setting-autorefresh" checked style="width: 18px; height: 18px; accent-color: var(--accent-cyan);">
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <h4>UI Animations</h4>
+                                <p style="font-size: 0.75rem; color: var(--text-muted);">Enable smooth section transition animations</p>
+                            </div>
+                            <input type="checkbox" id="setting-animations" checked style="width: 18px; height: 18px; accent-color: var(--accent-cyan);">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+        <!-- FOOTER -->
+        <footer style="padding: 1.5rem 2rem; border-top: 1px solid var(--border-glass); background: var(--bg-surface); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; font-size: 0.8rem; color: var(--text-muted);">
+            <div>
+                <p>CyberGuard Intelligence © 2026. All rights reserved.</p>
+                <p style="font-size: 0.7rem; margin-top: 0.2rem;">All cybersecurity intelligence displayed in this demonstration is simulated unless explicitly identified as verified external information.</p>
+            </div>
+            <div style="display: flex; gap: 1.5rem;">
+                <a href="#" onclick="showToast('Navigating to Privacy policy...'); return false;" style="color: var(--text-secondary); text-decoration: none;">Privacy</a>
+                <a href="#" onclick="showToast('Navigating to Security compliance...'); return false;" style="color: var(--text-secondary); text-decoration: none;">Security</a>
+                <a href="#" onclick="switchSection('about-us'); return false;" style="color: var(--text-secondary); text-decoration: none;">About</a>
+                <a href="#" onclick="showToast('Contact: soc@cyberguard-demo.internal'); return false;" style="color: var(--text-secondary); text-decoration: none;">Contact</a>
+            </div>
+        </footer>
+    </div>
+</div>
+
+<!-- COMPANY INTELLIGENCE DETAIL MODAL -->
+<div class="modal-overlay" id="company-modal">
+    <div class="modal-container">
+        <div class="modal-header">
+            <div>
+                <h2 id="modal-company-name" style="font-size: 1.3rem; font-weight: 700;">Company Name</h2>
+                <p id="modal-company-meta" style="font-size: 0.75rem; color: var(--text-muted);">Industry • Country</p>
+            </div>
+            <button class="modal-close" id="modal-close-btn"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="modal-body">
+            <div class="modal-tabs">
+                <button class="modal-tab-btn active" onclick="switchModalTab(event, 'tab-overview')">1. Security Overview</button>
+                <button class="modal-tab-btn" onclick="switchModalTab(event, 'tab-breaches')">2. Data Breaches</button>
+                <button class="modal-tab-btn" onclick="switchModalTab(event, 'tab-vulns')">3. Vulnerabilities</button>
+                <button class="modal-tab-btn" onclick="switchModalTab(event, 'tab-threats')">4. Threat Intel</button>
+                <button class="modal-tab-btn" onclick="switchModalTab(event, 'tab-incidents')">5. Incidents</button>
+                <button class="modal-tab-btn" onclick="switchModalTab(event, 'tab-surface')">6. Attack Surface</button>
+                <button class="modal-tab-btn" onclick="switchModalTab(event, 'tab-recs')">7. Recommendations</button>
+            </div>
+
+            <!-- Tab 1: Overview -->
+            <div id="tab-overview" class="modal-tab-pane active">
+                <div class="dashboard-grid" style="grid-template-columns: repeat(2, 1fr);">
+                    <div class="stat-card">
+                        <span class="stat-label">Security Score</span>
+                        <div class="stat-value" id="modal-score">--/100</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Risk Level</span>
+                        <div class="stat-value" id="modal-risk" style="font-size: 1.4rem;">--</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Security Status</span>
+                        <div class="stat-value" style="font-size: 1.1rem; color: #10b981;"><i class="fa-solid fa-shield-check"></i> Monitored</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Last Updated</span>
+                        <div class="stat-value" style="font-size: 1rem;" id="modal-last-update">Just now</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 2: Breaches -->
+            <div id="tab-breaches" class="modal-tab-pane">
+                <div class="glass-panel">
+                    <div style="display: flex; flex-direction: column; gap: 0.75rem;" id="modal-breach-content">
+                        <!-- Populated via JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 3: Vulnerabilities -->
+            <div id="tab-vulns" class="modal-tab-pane">
+                <div class="glass-panel">
+                    <div style="display: flex; flex-direction: column; gap: 0.75rem;" id="modal-vuln-content">
+                        <!-- Populated via JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 4: Threat Intelligence -->
+            <div id="tab-threats" class="modal-tab-pane">
+                <div class="glass-panel">
+                    <div style="display: flex; flex-direction: column; gap: 0.75rem;" id="modal-threat-content">
+                        <!-- Populated via JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 5: Incidents -->
+            <div id="tab-incidents" class="modal-tab-pane">
+                <div class="glass-panel">
+                    <div style="display: flex; flex-direction: column; gap: 0.75rem;" id="modal-incident-content">
+                        <!-- Populated via JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 6: Attack Surface -->
+            <div id="tab-surface" class="modal-tab-pane">
+                <div class="glass-panel">
+                    <div style="display: flex; flex-direction: column; gap: 0.75rem;" id="modal-surface-content">
+                        <!-- Populated via JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 7: Recommendations -->
+            <div id="tab-recs" class="modal-tab-pane">
+                <div class="glass-panel">
+                    <div style="display: flex; flex-direction: column; gap: 0.75rem;" id="modal-rec-content">
+                        <!-- Populated via JS -->
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toast-container"></div>
+
+<!-- JAVASCRIPT APPLICATION LOGIC -->
+<script>
+    // --- DATABASE & SIMULATED DATA ---
+    const dashboardStats = [
+        { label: "Companies Monitored", value: "25", trend: "+2 this month", positive: true, icon: "fa-building-shield" },
+        { label: "Active Threats", value: "18", trend: "-4% vs yesterday", positive: true, icon: "fa-shield-virus" },
+        { label: "Data Breaches", value: "7", trend: "+1 simulated", positive: false, icon: "fa-database" },
+        { label: "Critical Vulnerabilities", value: "12", trend: "Stable", positive: true, icon: "fa-bug" },
+        { label: "Security Incidents", value: "34", trend: "+5 flagged", positive: false, icon: "fa-triangle-exclamation" },
+        { label: "Overall Security Score", value: "78/100", trend: "+2.4 pts", positive: true, icon: "fa-gauge-high" }
+    ];
+
+    const recentActivityFeed = [
+        { time: "09:42", msg: "Critical vulnerability detected in cloud ingress controller", severity: "critical" },
+        { time: "09:37", msg: "Threat intelligence updated with new APT29 indicators", severity: "high" },
+        { time: "09:31", msg: "Company security score changed for Microsoft (85 -> 86)", severity: "medium" },
+        { time: "09:25", msg: "Suspicious lateral movement detected on subnet 10.42.0.0/16", severity: "high" },
+        { time: "09:18", msg: "Automated executive security compliance report generated", severity: "low" }
+    ];
+
+    const notificationsList = [
+        { id: 1, title: "Critical vulnerability detected", time: "3m ago", unread: true },
+        { id: 2, title: "Threat intelligence updated", time: "12m ago", unread: true },
+        { id: 3, title: "Company risk score changed", time: "35m ago", unread: true },
+        { id: 4, title: "New simulated breach record indexed", time: "1h ago", unread: false },
+        { id: 5, title: "Security compliance report generated", time: "2h ago", unread: false }
+    ];
+
+    const companiesDB = [
+        { name: "Microsoft", country: "USA", industry: "Technology", score: 86, risk: "Medium", alerts: 4, update: "10 mins ago", breachCount: 2, latestBreach: "Q3 Azure Token Leak", records: "1.2M", breachType: "Credential Exposure", severity: "High", vulns: { crit: 1, high: 3, med: 5, low: 3 }, threatLevel: "Elevated", malware: "RedLine Stealer", phishing: "Spear-phishing campaigns targeting Azure admins", ransomware: "LockBit variant probe blocked", creds: "14,500 compromised credentials monitored", incidentType: "Unauthorized API Probe", incidentDate: "2026-06-04", incidentSeverity: "Medium", incidentStatus: "Contained", assets: "4,200 Internet-facing assets, 120 Domains, 18 Cloud regions, 32 Exposed services" },
+        { name: "Google", country: "USA", industry: "Technology", score: 91, risk: "Low", alerts: 2, update: "5 mins ago", breachCount: 1, latestBreach: "Workspace Metadata Exposure", records: "450K", breachType: "API Misconfiguration", severity: "Medium", vulns: { crit: 0, high: 2, med: 4, low: 6 }, threatLevel: "Low", malware: "Zero-day browser probes", phishing: "Targeted Google Workspace auth lure", ransomware: "None active", creds: "3,200 monitored", incidentType: "DDoS Reflection", incidentDate: "2026-06-01", incidentSeverity: "Low", incidentStatus: "Mitigated", assets: "8,900 Internet-facing assets, 450 Domains, 35 Cloud regions, 12 Exposed services" },
+        { name: "Amazon", country: "USA", industry: "Cloud / E-Commerce", score: 84, risk: "Medium", alerts: 5, update: "15 mins ago", breachCount: 3, latestBreach: "AWS S3 Misconfiguration Sample", records: "2.5M", breachType: "Cloud Bucket Exposure", severity: "High", vulns: { crit: 2, high: 4, med: 6, low: 2 }, threatLevel: "Elevated", malware: "Cloud-inject scripts", phishing: "AWS Billing scam lures", ransomware: "BlackCat probe", creds: "22,000 monitored", incidentType: "IAM Privilege Escalation Attempt", incidentDate: "2026-06-05", incidentSeverity: "High", incidentStatus: "Investigating", assets: "12,400 Internet-facing assets, 310 Domains, 55 Cloud regions, 64 Exposed services" },
+        { name: "Apple", country: "USA", industry: "Technology", score: 94, risk: "Low", alerts: 1, update: "25 mins ago", breachCount: 0, latestBreach: "None recorded", records: "0", breachType: "N/A", severity: "Low", vulns: { crit: 0, high: 1, med: 2, low: 4 }, threatLevel: "Low", malware: "Pegasus-style spyware indicators", phishing: "Apple ID SMS phishing", ransomware: "None", creds: "1,100 monitored", incidentType: "App Store Malware Bypass", incidentDate: "2026-05-20", incidentSeverity: "Low", incidentStatus: "Resolved", assets: "2,100 Internet-facing assets, 80 Domains, 10 Cloud regions, 4 Exposed services" },
+        { name: "Meta", country: "USA", industry: "Technology", score: 79, risk: "High", alerts: 7, update: "8 mins ago", breachCount: 4, latestBreach: "Graph API Token Scraping", records: "15M", breachType: "Data Scraping", severity: "Critical", vulns: { crit: 3, high: 6, med: 8, low: 5 }, threatLevel: "High", malware: "Facestealer trojan variants", phishing: "Business Manager credential phishing", ransomware: "Hive affiliate probe", creds: "89,000 monitored", incidentType: "Credential Stuffing Wave", incidentDate: "2026-06-06", incidentSeverity: "High", incidentStatus: "Active Mitigation", assets: "5,600 Internet-facing assets, 220 Domains, 24 Cloud regions, 42 Exposed services" },
+        { name: "IBM", country: "USA", industry: "Enterprise Tech", score: 88, risk: "Low", alerts: 2, update: "30 mins ago", breachCount: 1, latestBreach: "Partner Portal Misconfiguration", records: "120K", breachType: "Supply Chain", severity: "Medium", vulns: { crit: 0, high: 2, med: 3, low: 7 }, threatLevel: "Low", malware: "Legacy banking trojans", phishing: "Executive whaling attacks", ransomware: "None", creds: "2,400 monitored", incidentType: "VPN Handshake Brute-force", incidentDate: "2026-05-18", incidentSeverity: "Medium", incidentStatus: "Resolved", assets: "3,400 Internet-facing assets, 95 Domains, 12 Cloud regions, 8 Exposed services" },
+        { name: "Oracle", country: "USA", industry: "Enterprise Software", score: 76, risk: "High", alerts: 8, update: "12 mins ago", breachCount: 3, latestBreach: "Database Management Console Exposure", records: "850K", breachType: "SQL Injection", severity: "Critical", vulns: { crit: 4, high: 5, med: 7, low: 3 }, threatLevel: "High", malware: "Database crawler bots", phishing: "Oracle Cloud billing scam", ransomware: "Clop ransomware probe", creds: "18,900 monitored", incidentType: "Unauthorized DB Shell Execution", incidentDate: "2026-06-03", incidentSeverity: "Critical", incidentStatus: "Contained", assets: "4,100 Internet-facing assets, 140 Domains, 16 Cloud regions, 30 Exposed services" },
+        { name: "Cisco", country: "USA", industry: "Networking", score: 90, risk: "Low", alerts: 2, update: "20 mins ago", breachCount: 1, latestBreach: "IOS-XE Telemetry Leak", records: "50K", breachType: "Firmware Vulnerability", severity: "Medium", vulns: { crit: 0, high: 1, med: 4, low: 8 }, threatLevel: "Low", malware: "Router botnets (Mirai variants)", phishing: "Cisco Webex phishing", ransomware: "None", creds: "1,500 monitored", incidentType: "SNMP Enumeration Scan", incidentDate: "2026-05-28", incidentSeverity: "Low", incidentStatus: "Resolved", assets: "2,900 Internet-facing assets, 60 Domains, 8 Cloud regions, 14 Exposed services" },
+        { name: "Intel", country: "USA", industry: "Semiconductors", score: 82, risk: "Medium", alerts: 3, update: "40 mins ago", breachCount: 2, latestBreach: "Firmware Source Code Access", records: "200K", breachType: "IP Theft", severity: "High", vulns: { crit: 1, high: 3, med: 5, low: 4 }, threatLevel: "Elevated", malware: "Side-channel exploit scripts", phishing: "Engineering credential harvesting", ransomware: "LockBit probe", creds: "5,400 monitored", incidentType: "Insider Data Exfiltration Probe", incidentDate: "2026-05-15", incidentSeverity: "High", incidentStatus: "Resolved", assets: "1,800 Internet-facing assets, 45 Domains, 6 Cloud regions, 9 Exposed services" },
+        { name: "NVIDIA", country: "USA", industry: "Semiconductors / AI", score: 85, risk: "Medium", alerts: 4, update: "18 mins ago", breachCount: 1, latestBreach: "GPU Driver Repository Probe", records: "75K", breachType: "Source Access", severity: "Medium", vulns: { crit: 1, high: 2, med: 6, low: 5 }, threatLevel: "Elevated", malware: "CUDA miner injection", phishing: "AI developer portal scam", ransomware: "ALPHV probe", creds: "8,100 monitored", incidentType: "GPU Cluster Intrusion Attempt", incidentDate: "2026-06-02", incidentSeverity: "Medium", incidentStatus: "Contained", assets: "2,200 Internet-facing assets, 70 Domains, 14 Cloud regions, 16 Exposed services" },
+        { name: "Dell Technologies", country: "USA", industry: "Hardware / Tech", score: 77, risk: "High", alerts: 6, update: "22 mins ago", breachCount: 3, latestBreach: "Customer Portal Data Leak", records: "4.9M", breachType: "Database Dump", severity: "Critical", vulns: { crit: 3, high: 5, med: 6, low: 2 }, threatLevel: "High", malware: "Ransomware staging scripts", phishing: "Dell support scam calls/emails", ransomware: "Play ransomware indicator", creds: "31,000 monitored", incidentType: "SQLi Database Breach", incidentDate: "2026-05-30", incidentSeverity: "High", incidentStatus: "Remediated", assets: "3,800 Internet-facing assets, 110 Domains, 12 Cloud regions, 24 Exposed services" },
+        { name: "HP", country: "USA", industry: "Hardware / Tech", score: 81, risk: "Medium", alerts: 3, update: "50 mins ago", breachCount: 2, latestBreach: "Partner Support Tool Exposure", records: "300K", breachType: "API Leak", severity: "Medium", vulns: { crit: 1, high: 3, med: 4, low: 5 }, threatLevel: "Elevated", malware: "Printer firmware exploit tools", phishing: "HP warranty phishing", ransomware: "None", creds: "6,200 monitored", incidentType: "Unauthorized API Access", incidentDate: "2026-05-12", incidentSeverity: "Medium", incidentStatus: "Resolved", assets: "2,500 Internet-facing assets, 85 Domains, 9 Cloud regions, 11 Exposed services" },
+        { name: "SAP", country: "Germany", industry: "Enterprise Software", score: 87, risk: "Low", alerts: 2, update: "10 mins ago", breachCount: 1, latestBreach: "ERP Connector Vulnerability", records: "90K", breachType: "ERP Exploit", severity: "High", vulns: { crit: 1, high: 2, med: 4, low: 6 }, threatLevel: "Low", malware: "ICS/SCADA reconnaissance bots", phishing: "SAP HANA credential phishing", ransomware: "LockBit probe", creds: "4,500 monitored", incidentType: "RFC Gateway Probe", incidentDate: "2026-06-01", incidentSeverity: "Medium", incidentStatus: "Mitigated", assets: "3,100 Internet-facing assets, 90 Domains, 15 Cloud regions, 19 Exposed services" },
+        { name: "Salesforce", country: "USA", industry: "Cloud CRM", score: 89, risk: "Low", alerts: 2, update: "14 mins ago", breachCount: 1, latestBreach: "Community Cloud Misconfig", records: "150K", breachType: "Permission Flaw", severity: "Medium", vulns: { crit: 0, high: 2, med: 5, low: 7 }, threatLevel: "Low", malware: "Salesforce phishing integrations", phishing: "Fake CRM login portals", ransomware: "None", creds: "9,800 monitored", incidentType: "Apex Code Injection Test", incidentDate: "2026-05-25", incidentSeverity: "Low", incidentStatus: "Resolved", assets: "4,500 Internet-facing assets, 130 Domains, 20 Cloud regions, 22 Exposed services" },
+        { name: "Adobe", country: "USA", industry: "Software", score: 83, risk: "Medium", alerts: 4, update: "35 mins ago", breachCount: 2, latestBreach: "Creative Cloud Token Leak", records: "500K", breachType: "Token Exposure", severity: "High", vulns: { crit: 1, high: 3, med: 6, low: 3 }, threatLevel: "Elevated", malware: "Cracked software bundled malware", phishing: "Adobe Acrobat invoice scams", ransomware: "Black Basta probe", creds: "14,200 monitored", incidentType: "API Rate-Limit Bypass", incidentDate: "2026-05-19", incidentSeverity: "Medium", incidentStatus: "Contained", assets: "2,700 Internet-facing assets, 95 Domains, 11 Cloud regions, 15 Exposed services" },
+        { name: "Accenture", country: "Ireland", industry: "IT Consulting", score: 85, risk: "Medium", alerts: 3, update: "16 mins ago", breachCount: 2, latestBreach: "Client Engagement Platform Leak", records: "230K", breachType: "Ransomware Extortion Attempt", severity: "High", vulns: { crit: 1, high: 2, med: 5, low: 6 }, threatLevel: "Elevated", malware: "LockBit 3.0 ransomware sample", phishing: "Consultant credential harvesting", ransomware: "LockBit containment", creds: "11,500 monitored", incidentType: "VPN Credential Stuffing", incidentDate: "2026-05-27", incidentSeverity: "High", incidentStatus: "Resolved", assets: "3,300 Internet-facing assets, 115 Domains, 16 Cloud regions, 21 Exposed services" },
+        { name: "TCS", country: "India", industry: "IT Services", score: 84, risk: "Medium", alerts: 3, update: "25 mins ago", breachCount: 2, latestBreach: "Internal HR Portal Sample Leak", records: "180K", breachType: "Access Control Flaw", severity: "Medium", vulns: { crit: 1, high: 2, med: 6, low: 5 }, threatLevel: "Elevated", malware: "Agent Tesla spyware", phishing: "Employee onboarding phishing", ransomware: "None", creds: "12,100 monitored", incidentType: "Intranet Port Scan", incidentDate: "2026-05-22", incidentSeverity: "Medium", incidentStatus: "Contained", assets: "4,000 Internet-facing assets, 150 Domains, 18 Cloud regions, 28 Exposed services" },
+        { name: "Infosys", country: "India", industry: "IT Services", score: 86, risk: "Medium", alerts: 2, update: "11 mins ago", breachCount: 1, latestBreach: "Developer Sandbox Exposure", records: "65K", breachType: "Misconfiguration", severity: "Medium", vulns: { crit: 0, high: 2, med: 4, low: 8 }, threatLevel: "Low", malware: "Infostealer logs", phishing: "Corporate travel scam lures", ransomware: "None", creds: "7,400 monitored", incidentType: "SSH Brute-force Wave", incidentDate: "2026-06-02", incidentSeverity: "Low", incidentStatus: "Mitigated", assets: "3,500 Internet-facing assets, 120 Domains, 14 Cloud regions, 19 Exposed services" },
+        { name: "Wipro", country: "India", industry: "IT Services", score: 82, risk: "Medium", alerts: 4, update: "28 mins ago", breachCount: 2, latestBreach: "Client Phishing Campaign Vector", records: "110K", breachType: "Phishing Compromise", severity: "High", vulns: { crit: 1, high: 3, med: 5, low: 4 }, threatLevel: "Elevated", malware: "AsyncRAT payloads", phishing: "Wipro HR policy scam emails", ransomware: "Conti remnant probe", creds: "9,200 monitored", incidentType: "Mailbox Exfiltration Attempt", incidentDate: "2026-05-24", incidentSeverity: "High", incidentStatus: "Resolved", assets: "2,800 Internet-facing assets, 95 Domains, 11 Cloud regions, 16 Exposed services" },
+        { name: "HCLTech", country: "India", industry: "IT Services", score: 80, risk: "Medium", alerts: 4, update: "19 mins ago", breachCount: 2, latestBreach: "Project Management Tool Leak", records: "140K", breachType: "Unauthenticated Endpoint", severity: "Medium", vulns: { crit: 1, high: 3, med: 7, low: 3 }, threatLevel: "Elevated", malware: "QakBot samples", phishing: "Vendor invoice phishing", ransomware: "BlackCat probe", creds: "10,300 monitored", incidentType: "Exposed RDP Gateway", incidentDate: "2026-05-29", incidentSeverity: "Medium", incidentStatus: "Contained", assets: "3,000 Internet-facing assets, 105 Domains, 13 Cloud regions, 20 Exposed services" },
+        { name: "Tech Mahindra", country: "India", industry: "IT Services", score: 78, risk: "High", alerts: 5, update: "45 mins ago", breachCount: 3, latestBreach: "Telecom Billing Integration Flaw", records: "320K", breachType: "API Exploit", severity: "Critical", vulns: { crit: 2, high: 4, med: 6, low: 3 }, threatLevel: "High", malware: "Mirai IoT variants", phishing: "Telecom portal credential theft", ransomware: "Ryuk variant probe", creds: "15,800 monitored", incidentType: "API Data Scraping", incidentDate: "2026-05-16", incidentSeverity: "High", incidentStatus: "Mitigated", assets: "3,200 Internet-facing assets, 110 Domains, 12 Cloud regions, 25 Exposed services" },
+        { name: "Capgemini", country: "France", industry: "IT Consulting", score: 85, risk: "Medium", alerts: 2, update: "21 mins ago", breachCount: 1, latestBreach: "Consultant VPN Credential Leak", records: "80K", breachType: "Credential Stuffing", severity: "Medium", vulns: { crit: 0, high: 2, med: 5, low: 6 }, threatLevel: "Low", malware: "RedLine stealer logs", phishing: "Capgemini payroll scam", ransomware: "None", creds: "6,900 monitored", incidentType: "Brute-force SSO Probe", incidentDate: "2026-06-03", incidentSeverity: "Low", incidentStatus: "Resolved", assets: "2,600 Internet-facing assets, 90 Domains, 10 Cloud regions, 14 Exposed services" },
+        { name: "Cognizant", country: "USA", industry: "IT Services", score: 79, risk: "High", alerts: 6, update: "15 mins ago", breachCount: 3, latestBreach: "Sox Compliance Vault Sample Leak", records: "410K", breachType: "Ransomware Incursion", severity: "Critical", vulns: { crit: 3, high: 4, med: 5, low: 3 }, threatLevel: "High", malware: "Maze ransomware variant", phishing: "Executive impersonation email", ransomware: "Maze extortion attempt", creds: "19,400 monitored", incidentType: "Internal Network Reconnaissance", incidentDate: "2026-05-14", incidentSeverity: "Critical", incidentStatus: "Remediated", assets: "3,600 Internet-facing assets, 125 Domains, 15 Cloud regions, 29 Exposed services" },
+        { name: "LTIMindtree", country: "India", industry: "IT Services", score: 83, risk: "Medium", alerts: 3, update: "33 mins ago", breachCount: 1, latestBreach: "Financial Analytics Portal Probe", records: "95K", breachType: "Insecure Direct Object Reference", severity: "Medium", vulns: { crit: 1, high: 2, med: 6, low: 4 }, threatLevel: "Elevated", malware: "Agent Tesla logs", phishing: "Banking portal phishing", ransomware: "None", creds: "5,100 monitored", incidentType: "IDOR Exploit Attempt", incidentDate: "2026-05-26", incidentSeverity: "Medium", incidentStatus: "Contained", assets: "2,400 Internet-facing assets, 80 Domains, 9 Cloud regions, 12 Exposed services" },
+        { name: "DXC Technology", country: "USA", industry: "IT Services", score: 77, risk: "High", alerts: 5, update: "38 mins ago", breachCount: 3, latestBreach: "Legacy Mainframe Endpoint Exposure", records: "620K", breachType: "Unpatched Vulnerability", severity: "Critical", vulns: { crit: 3, high: 5, med: 6, low: 2 }, threatLevel: "High", malware: "Cobalt Strike beacons", phishing: "IT helpdesk scam lures", ransomware: "BlackSuit probe", creds: "24,100 monitored", incidentType: "Remote Code Execution Attempt", incidentDate: "2026-05-11", incidentSeverity: "Critical", incidentStatus: "Resolved", assets: "3,900 Internet-facing assets, 130 Domains, 14 Cloud regions, 31 Exposed services" }
+    ];
+
+    const threatIntelHubCards = [
+        { title: "Phishing Vectors", level: "High", count: "4,250", trend: "+12%", desc: "Credential harvesting campaigns targeting enterprise SSO portals using advanced Adversary-in-The-Middle (AiTM) proxies." },
+        { title: "Malware Signatures", level: "Critical", count: "1,840", trend: "+5%", desc: "Proliferation of modular infostealers (RedLine, LummaC2) distributed via cracked software bundles and malvertising." },
+        { title: "Ransomware Groups", level: "Critical", count: "310 Active", trend: "+8%", desc: "LockBit 3.0, BlackCat, and ALPHV affiliates executing double-extortion tactics on unpatched VPN gateways." },
+        { title: "DDoS Activity", level: "Medium", count: "855 Attacks", trend: "-3%", desc: "Layer 7 HTTP flood attacks leveraging compromised IoT and residential proxy botnets against cloud edge infrastructure." },
+        { title: "Credential Theft", level: "High", count: "142K Logs", trend: "+18%", desc: "Dark web marketplace indexation of corporate credentials leaked from stealer logs and third-party SaaS breaches." },
+        { title: "Supply Chain Attacks", level: "High", count: "45 Vectors", trend: "+15%", desc: "Compromised open-source package repositories (npm, PyPI) injecting malicious post-install scripts into CI/CD pipelines." },
+        { title: "Insider Threats", level: "Medium", count: "18 Incidents", trend: "Stable", desc: "Monitored anomalies in data exfiltration via unauthorized cloud storage syncs and removable media." }
+    ];
+
+    const simulatedThreatMapRegions = [
+        { region: "North America", level: "High Threat (Level 4)", incidents: "1,420 active probes", vectors: "Cloud Misconfig, Phishing" },
+        { region: "Europe", level: "Elevated Threat (Level 3)", incidents: "980 active probes", vectors: "Ransomware, Supply Chain" },
+        { region: "Asia", level: "High Threat (Level 4)", incidents: "1,650 active probes", vectors: "APT Recon, Credential Stuffing" },
+        { region: "Middle East", level: "Moderate Threat (Level 2)", incidents: "410 active probes", vectors: "DDoS, Web Exploits" },
+        { region: "Africa", level: "Low Threat (Level 1)", incidents: "190 active probes", vectors: "Phishing, Basic Scans" },
+        { region: "South America", level: "Moderate Threat (Level 2)", incidents: "340 active probes", vectors: "SQLi, Malware Droppers" }
+    ];
+
+    const dataBreachesDemo = [
+        { company: "Meta", date: "2026-06-06", records: "15M", type: "Data Scraping", severity: "Critical", score: "94/100" },
+        { company: "Dell Technologies", date: "2026-05-30", records: "4.9M", type: "Database Dump", severity: "Critical", score: "89/100" },
+        { company: "Amazon", date: "2026-05-28", records: "2.5M", type: "Cloud Bucket Exposure", severity: "High", score: "82/100" },
+        { company: "Microsoft", date: "2026-05-20", records: "1.2M", type: "Credential Exposure", severity: "High", score: "78/100" },
+        { company: "Oracle", date: "2026-05-15", records: "850K", type: "SQL Injection", severity: "Critical", score: "91/100" },
+        { company: "DXC Technology", date: "2026-05-11", records: "620K", type: "Unpatched Vulnerability", severity: "Critical", score: "88/100" },
+        { company: "Adobe", date: "2026-05-04", records: "500K", type: "Token Exposure", severity: "High", score: "74/100" }
+    ];
+
+    const vulnerabilitiesDemo = [
+        { cve: "CVE-2026-1042", cvss: "9.8", severity: "critical", tech: "Linux Kernel Netfilter", desc: "Remote Code Execution via integer overflow in packet parsing stack.", patch: "Patch Available (v6.14.2)" },
+        { cve: "CVE-2026-0891", cvss: "8.8", severity: "high", tech: "Microsoft Exchange Server", desc: "Post-authentication arbitrary file write via unvalidated RPC endpoints.", patch: "Pending Update" },
+        { cve: "CVE-2026-2210", cvss: "9.1", severity: "critical", tech: "Apache Log4j Core", desc: "JNDI lookup bypass allowing unconstrained remote codebase loading.", patch: "Patched in v2.23.1" },
+        { cve: "CVE-2026-0544", cvss: "7.5", severity: "medium", tech: "Cisco IOS-XE Web UI", desc: "Privilege escalation vulnerability allowing local root command injection.", patch: "Patch Available" },
+        { cve: "CVE-2026-3109", cvss: "8.5", severity: "high", tech: "Kubernetes Ingress-Nginx", desc: "Annotation injection leading to arbitrary command execution on controller pod.", patch: "Pending Review" }
+    ];
+
+    const reportsList = [
+        { title: "Company Security Report", desc: "Comprehensive risk posture analysis across all 25 monitored enterprise technology organizations." },
+        { title: "Vulnerability Report", desc: "Detailed breakdown of CVSS scores, zero-day exposure vectors, and unpatched CVE queues." },
+        { title: "Threat Intelligence Report", desc: "Global telemetry on active APT groups, malware strains, and ransomware distribution tactics." },
+        { title: "Data Breach Report", desc: "Historical and current disclosed breach logs, compromised record volumes, and vector analysis." },
+        { title: "Executive Security Summary", desc: "High-level SOC briefing outlining architectural scores, compliance metrics, and recommended actions." }
+    ];
+
+    // --- INITIALIZATION ---
+    document.addEventListener('DOMContentLoaded', () => {
+        initNavigation();
+        initDashboard();
+        initCompanyIntelligence();
+        initThreatIntelligence();
+        initDataBreaches();
+        initVulnerabilities();
+        initReports();
+        initNotifications();
+        initGlobalSearch();
+    });
+
+    // --- NAVIGATION ---
+    function initNavigation() {
+        const navItems = document.querySelectorAll('.nav-item');
+        navItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = item.getAttribute('data-target');
+                switchSection(target);
+            });
+        });
+    }
+
+    function switchSection(targetId) {
+        document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+        const activeNav = document.querySelector(`.nav-item[data-target="${targetId}"]`);
+        if (activeNav) activeNav.classList.add('active');
+
+        document.querySelectorAll('.app-section').forEach(sec => sec.classList.remove('active'));
+        const targetSec = document.getElementById(targetId);
+        if (targetSec) targetSec.classList.add('active');
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // --- TOAST NOTIFICATIONS ---
+    function showToast(message) {
+        if (!document.getElementById('setting-notifications').checked) return;
+        const container = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.innerHTML = `<i class="fa-solid fa-shield-halved" style="color: var(--accent-cyan);"></i><span>${message}</span>`;
+        container.appendChild(toast);
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateX(100%)';
+            setTimeout(() => toast.remove(), 300);
+        }, 3500);
+    }
+
+    // --- NOTIFICATIONS DROPDOWN ---
+    function initNotifications() {
+        const btn = document.getElementById('notif-toggle-btn');
+        const dropdown = document.getElementById('notification-dropdown');
+        
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+            renderNotifications();
+        });
+
+        document.addEventListener('click', () => {
+            dropdown.style.display = 'none';
+        });
+
+        dropdown.addEventListener('click', (e) => e.stopPropagation());
+
+        document.getElementById('mark-all-read').addEventListener('click', () => {
+            notificationsList.forEach(n => n.unread = false);
+            document.getElementById('notif-count').style.display = 'none';
+            renderNotifications();
+            showToast('All notifications marked as read.');
+        });
+    }
+
+    function renderNotifications() {
+        const list = document.getElementById('notif-list');
+        list.innerHTML = notificationsList.map(n => `
+            <div class="notif-item ${n.unread ? 'unread' : ''}" onclick="markNotificationRead(${n.id})">
+                <i class="fa-solid fa-circle" style="font-size: 0.4rem; color: ${n.unread ? 'var(--accent-cyan)' : 'var(--text-muted)'}; margin-top: 6px;"></i>
+                <div>
+                    <p style="font-weight: ${n.unread ? '600' : '400'};">${n.title}</p>
+                    <span style="font-size: 0.7rem; color: var(--text-muted);">${n.time}</span>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function markNotificationRead(id) {
+        const item = notificationsList.find(n => n.id === id);
+        if (item) item.unread = false;
+        renderNotifications();
+        const unreadCount = notificationsList.filter(n => n.unread).length;
+        const badge = document.getElementById('notif-count');
+        if (unreadCount === 0) badge.style.display = 'none';
+        else badge.innerText = unreadCount;
+    }
+
+    // --- DASHBOARD SECTION ---
+    let threatChartInstance = null;
+    let riskChartInstance = null;
+    let radarChartInstance = null;
+    let doughnutChartInstance = null;
+
+    function initDashboard() {
+        // Stat Cards
+        const grid = document.getElementById('stat-cards-grid');
+        grid.innerHTML = dashboardStats.map(s => `
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon"><i class="fa-solid ${s.icon}"></i></div>
+                    <span class="stat-trend ${s.positive ? 'positive' : 'negative'}">${s.trend}</span>
+                </div>
+                <div class="stat-value">${s.value}</div>
+                <div class="stat-label">${s.label}</div>
+            </div>
+        `).join('');
+
+        // Activity Feed
+        const feed = document.getElementById('activity-feed-container');
+        feed.innerHTML = recentActivityFeed.map(a => `
+            <div class="activity-item">
+                <div class="activity-info">
+                    <span class="activity-time">${a.time}</span>
+                    <span>${a.msg}</span>
+                </div>
+                <span class="badge ${a.severity}">${a.severity}</span>
+            </div>
+        `).join('');
+
+        // Threat Activity Chart
+        const ctxThreat = document.getElementById('threatActivityChart').getContext('2d');
+        threatChartInstance = new Chart(ctxThreat, {
+            type: 'line',
+            data: {
+                labels: ['Day 1', 'Day 5', 'Day 10', 'Day 15', 'Day 20', 'Day 25', 'Day 30'],
+                datasets: [
+                    { label: 'Malware', data: [12, 19, 15, 22, 28, 24, 30], borderColor: '#ef4444', backgroundColor: 'rgba(239, 68, 68, 0.1)', tension: 0.4, fill: true },
+                    { label: 'Phishing', data: [25, 30, 28, 35, 42, 39, 45], borderColor: '#38bdf8', backgroundColor: 'rgba(56, 189, 248, 0.1)', tension: 0.4, fill: true },
+                    { label: 'Ransomware', data: [5, 8, 6, 11, 9, 14, 12], borderColor: '#f97316', backgroundColor: 'rgba(249, 115, 22, 0.1)', tension: 0.4, fill: true }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { labels: { color: '#94a3b8', font: { size: 11 } } } },
+                scales: {
+                    x: { grid: { color: 'rgba(56, 189, 248, 0.05)' }, ticks: { color: '#94a3b8' } },
+                    y: { grid: { color: 'rgba(56, 189, 248, 0.05)' }, ticks: { color: '#94a3b8' } }
+                }
+            }
+        });
+
+        // Security Risk Doughnut Chart
+        const ctxRisk = document.getElementById('securityRiskChart').getContext('2d');
+        riskChartInstance = new Chart(ctxRisk, {
+            type: 'doughnut',
+            data: {
+                labels: ['Critical', 'High', 'Medium', 'Low'],
+                datasets: [{
+                    data: [12, 24, 38, 18],
+                    backgroundColor: ['#ef4444', '#f97316', '#eab308', '#10b981'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8', font: { size: 11 } } } },
+                cutout: '70%'
+            }
+        });
+    }
+
+    function updateThreatChart(days) {
+        document.querySelectorAll('.panel-actions .btn-filter').forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+
+        let dataMultiplier = days === '7' ? 0.4 : (days === '30' ? 1.0 : 2.2);
+        threatChartInstance.data.datasets[0].data = [12, 19, 15, 22, 28, 24, 30].map(v => Math.round(v * dataMultiplier));
+        threatChartInstance.data.datasets[1].data = [25, 30, 28, 35, 42, 39, 45].map(v => Math.round(v * dataMultiplier));
+        threatChartInstance.data.datasets[2].data = [5, 8, 6, 11, 9, 14, 12].map(v => Math.round(v * dataMultiplier));
+        threatChartInstance.update();
+        showToast(`Threat telemetry updated for last ${days} days.`);
+    }
+
+    // --- COMPANY INTELLIGENCE SECTION ---
+    function initCompanyIntelligence() {
+        renderCompanies(companiesDB);
+
+        // Search & Filter listeners
+        document.getElementById('company-search-input').addEventListener('input', filterCompanies);
+        document.getElementById('company-risk-filter').addEventListener('change', filterCompanies);
+
+        // Populate Comparison Selectors
+        const sel1 = document.getElementById('comp-select-1');
+        const sel2 = document.getElementById('comp-select-2');
+        sel1.innerHTML = companiesDB.map((c, i) => `<option value="${i}">${c.name}</option>`).join('');
+        sel2.innerHTML = companiesDB.map((c, i) => `<option value="${i}" ${i === 1 ? 'selected' : ''}>${c.name}</option>`).join('');
+        updateComparison();
+    }
+
+    function renderCompanies(list) {
+        const grid = document.getElementById('company-grid-container');
+        if (list.length === 0) {
+            grid.innerHTML = `<p style="color: var(--text-muted); grid-column: 1/-1; text-align: center; padding: 2rem;">No companies match the selected criteria.</p>`;
+            return;
+        }
+        grid.innerHTML = list.map(c => `
+            <div class="company-card">
+                <div>
+                    <div class="company-card-header">
+                        <div class="company-title">
+                            <h4>${c.name}</h4>
+                            <p>${c.industry} •${c.country}</p>
+                        </div>
+                        <div class="score-circle">${c.score}</div>
+                    </div>
+                    <div class="company-details-grid">
+                        <div><span>Risk Level</span><strong style="color: ${getRiskColor(c.risk)};">${c.risk}</strong></div>
+                        <div><span>Active Alerts</span><strong>${c.alerts}</strong></div>
+                        <div><span>Last Updated</span><strong>${c.update}</strong></div>
+                        <div><span>Breaches</span><strong>${c.breachCount}</strong></div>
+                    </div>
+                </div>
+                <button class="btn-primary-custom" onclick="openCompanyModal('${c.name}')">View Intelligence</button>
+            </div>
+        `).join('');
+    }
+
+    function getRiskColor(risk) {
+        switch(risk) {
+            case 'Critical': return '#ef4444';
+            case 'High': return '#f97316';
+            case 'Medium': return '#eab308';
+            default: return '#10b981';
+        }
+    }
+
+    function filterCompanies() {
+        const query = document.getElementById('company-search-input').value.toLowerCase();
+        const riskVal = document.getElementById('company-risk-filter').value;
+
+        const filtered = companiesDB.filter(c => {
+            const matchesQuery = c.name.toLowerCase().includes(query) || c.industry.toLowerCase().includes(query);
+            const matchesRisk = riskVal === 'all' || c.risk === riskVal;
+            return matchesQuery && matchesRisk;
+        });
+        renderCompanies(filtered);
+    }
+
+    // Company Comparison Tool
+    function updateComparison() {
+        const idx1 = document.getElementById('comp-select-1').value;
+        const idx2 = document.getElementById('comp-select-2').value;
+        const c1 = companiesDB[idx1];
+        const c2 = companiesDB[idx2];
+
+        const area = document.getElementById('comparison-result-area');
+        area.innerHTML = `
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th>${c1.name}</th>
+                        <th>${c2.name}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Security Score</td><td><strong>${c1.score}/100</strong></td><td><strong>${c2.score}/100</strong></td></tr>
+                    <tr><td>Risk Level</td><td><span style="color: ${getRiskColor(c1.risk)}">${c1.risk}</span></td><td><span style="color: ${getRiskColor(c2.risk)}">${c2.risk}</span></td></tr>
+                    <tr><td>Active Alerts</td><td>${c1.alerts}</td><td>${c2.alerts}</td></tr>
+                    <tr><td>Vulnerabilities (Crit/High)</td><td>${c1.vulns.crit + c1.vulns.high}</td><td>${c2.vulns.crit + c2.vulns.high}</td></tr>
+                    <tr><td>Recorded Breaches</td><td>${c1.breachCount}</td><td>${c2.breachCount}</td></tr>
+                    <tr><td>Industry</td><td>${c1.industry}</td><td>${c2.industry}</td></tr>
+                    <tr><td>Country</td><td>${c1.country}</td><td>${c2.country}</td></tr>
+                </tbody>
+            </table>
+        `;
+    }
+
+    // --- COMPANY MODAL SYSTEM ---
+    const modalOverlay = document.getElementById('company-modal');
+    document.getElementById('modal-close-btn').addEventListener('click', closeCompanyModal);
+    modalOverlay.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) closeCompanyModal();
+    });
+
+    function openCompanyModal(companyName) {
+        const c = companiesDB.find(item => item.name === companyName);
+        if (!c) return;
+
+        document.getElementById('modal-company-name').innerText = c.name;
+        document.getElementById('modal-company-meta').innerText = `${c.industry} •${c.country} • Monitored Entity`;
+        document.getElementById('modal-score').innerText = `${c.score}/100`;
+        document.getElementById('modal-risk').innerText = c.risk;
+        document.getElementById('modal-risk').style.color = getRiskColor(c.risk);
+        document.getElementById('modal-last-update').innerText = c.update;
+
+        // Populate Breaches Tab
+        document.getElementById('modal-breach-content').innerHTML = `
+            <p><strong>Total Recorded Incidents:</strong> ${c.breachCount}</p>
+            <p><strong>Latest Incident:</strong> ${c.latestBreach}</p>
+            <p><strong>Records Affected:</strong> ${c.records}</p>
+            <p><strong>Breach Type:</strong> ${c.breachType}</p>
+            <p><strong>Severity:</strong> <span class="badge ${c.severity.toLowerCase()}">${c.severity}</span></p>
+        `;
+
+        // Populate Vulnerabilities Tab
+        document.getElementById('modal-vuln-content').innerHTML = `
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; text-align: center; margin-bottom: 1rem;">
+                <div style="background: rgba(239,68,68,0.1); padding: 0.5rem; border-radius: 6px;"><span style="font-size:0.7rem; color:#ef4444;">CRITICAL</span><br><strong>${c.vulns.crit}</strong></div>
+                <div style="background: rgba(249,115,22,0.1); padding: 0.5rem; border-radius: 6px;"><span style="font-size:0.7rem; color:#f97316;">HIGH</span><br><strong>${c.vulns.high}</strong></div>
+                <div style="background: rgba(234,179,8,0.1); padding: 0.5rem; border-radius: 6px;"><span style="font-size:0.7rem; color:#eab308;">MEDIUM</span><br><strong>${c.vulns.med}</strong></div>
+                <div style="background: rgba(16,185,129,0.1); padding: 0.5rem; border-radius: 6px;"><span style="font-size:0.7rem; color:#10b981;">LOW</span><br><strong>${c.vulns.low}</strong></div>
+            </div>
+            <p><strong>CVE Samples Tracked:</strong> CVE-2026-9012, CVE-2026-4411, CVE-2026-0339</p>
+            <p><strong>Patch Status:</strong> 85% Remediated across primary nodes</p>
+        `;
+
+        // Populate Threat Intel Tab
+        document.getElementById('modal-threat-content').innerHTML = `
+            <p><strong>Threat Posture Level:</strong> <span style="color: var(--accent-cyan);">${c.threatLevel}</span></p>
+            <p><strong>Primary Attack Vectors:</strong> Credential stuffing, perimeter API probing</p>
+            <p><strong>Associated Malware Strains:</strong> ${c.malware}</p>
+            <p><strong>Active Phishing Lures:</strong> ${c.phishing}</p>
+            <p><strong>Ransomware Indicators:</strong> ${c.ransomware}</p>
+            <p><strong>Credential Volume:</strong> ${c.creds}</p>
+        `;
+
+        // Populate Incidents Tab
+        document.getElementById('modal-incident-content').innerHTML = `
+            <p><strong>Latest Incident Type:</strong> ${c.incidentType}</p>
+            <p><strong>Detection Timestamp:</strong> ${c.incidentDate}</p>
+            <p><strong>Severity Rating:</strong> <span class="badge ${c.incidentSeverity.toLowerCase()}">${c.incidentSeverity}</span></p>
+            <p><strong>SOC Status:</strong> <span style="color: #10b981; font-weight: 600;">${c.incidentStatus}</span></p>
+        `;
+
+        // Populate Attack Surface Tab
+        document.getElementById('modal-surface-content').innerHTML = `
+            <p><i class="fa-solid fa-globe" style="color: var(--accent-cyan);"></i> ${c.assets}</p>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">Continuous automated surface discovery active. Zero unmonitored shadow IT endpoints flagged.</p>
+        `;
+
+        // Populate Recommendations Tab
+        document.getElementById('modal-rec-content').innerHTML = `
+            <ul style="padding-left: 1.25rem; display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.85rem;">
+                <li>Enforce phishing-resistant Multi-Factor Authentication (MFA) across all administrative portals.</li>
+                <li>Immediately patch critical CVE backlog identified in edge gateways.</li>
+                <li>Monitor exposed corporate credentials flagged in dark-web infostealer logs.</li>
+                <li>Improve endpoint detection telemetry on remote contractor workstations.</li>
+                <li>Review cloud IAM role permissions and remove over-privileged tokens.</li>
+            </ul>
+        `;
+
+        // Reset modal tabs to first tab
+        document.querySelectorAll('.modal-tab-btn').forEach((btn, idx) => {
+            if (idx === 0) btn.classList.add('active');
+            else btn.classList.remove('active');
+        });
+        document.querySelectorAll('.modal-tab-pane').forEach((pane, idx) => {
+            if (idx === 0) pane.classList.add('active');
+            else pane.classList.remove('active');
+        });
+
+        modalOverlay.style.display = 'flex';
+    }
+
+    function closeCompanyModal() {
+        modalOverlay.style.display = 'none';
+    }
+
+    function switchModalTab(event, tabId) {
+        document.querySelectorAll('.modal-tab-btn').forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+
+        document.querySelectorAll('.modal-tab-pane').forEach(pane => pane.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+    }
+
+    // --- THREAT INTELLIGENCE SECTION ---
+    function initThreatIntelligence() {
+        const grid = document.getElementById('threat-intel-grid');
+        grid.innerHTML = threatIntelHubCards.map(t => `
+            <div class="stat-card">
+                <div class="stat-header">
+                    <h4>${t.title}</h4>
+                    <span class="badge ${t.level.toLowerCase().includes('critical') ? 'critical' : (t.level.toLowerCase().includes('high') ? 'high' : 'medium')}">${t.level}</span>
+                </div>
+                <div class="stat-value" style="font-size: 1.4rem; margin: 0.5rem 0;">${t.count}</div>
+                <p style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4;">${t.desc}</p>
+            </div>
+        `).join('');
+
+        const mapContainer = document.getElementById('threat-map-container');
+        mapContainer.innerHTML = simulatedThreatMapRegions.map(m => `
+            <div class="threat-region-card">
+                <h4 style="font-size: 1rem; margin-bottom: 0.3rem;">${m.region}</h4>
+                <p style="font-size: 0.8rem; color: var(--accent-cyan); font-weight: 600; margin-bottom: 0.5rem;">${m.level}</p>
+                <p style="font-size: 0.8rem; color: var(--text-secondary);"><strong>Incidents:</strong> ${m.incidents}</p>
+                <p style="font-size: 0.8rem; color: var(--text-secondary);"><strong>Primary Vectors:</strong> ${m.vectors}</p>
+            </div>
+        `).join('');
+    }
+
+    // --- DATA BREACHES SECTION ---
+    function initDataBreaches() {
+        const tbody = document.getElementById('breaches-table-body');
+        tbody.innerHTML = dataBreachesDemo.map(b => `
+            <tr>
+                <td><strong>${b.company}</strong></td>
+                <td>${b.date}</td>
+                <td>${b.records}</td>
+                <td>${b.type}</td>
+                <td><span class="badge ${b.severity.toLowerCase()}">${b.severity}</span></td>
+                <td>${b.score}</td>
+            </tr>
+        `).join('');
+    }
+
+    // --- VULNERABILITIES SECTION ---
+    function initVulnerabilities() {
+        const tbody = document.getElementById('vuln-table-body');
+        tbody.innerHTML = vulnerabilitiesDemo.map(v => `
+            <tr>
+                <td><strong>${v.cve}</strong></td>
+                <td><span style="color: ${v.cvss >= 9 ? '#ef4444' : '#f97316'}; font-weight: 700;">${v.cvss}</span></td>
+                <td><span class="badge ${v.severity}">${v.severity}</span></td>
+                <td>${v.tech}</td>
+                <td style="max-width: 300px; color: var(--text-secondary);">${v.desc}</td>
+                <td><span style="color: #10b981; font-weight: 600;">${v.patch}</span></td>
+            </tr>
+        `).join('');
+
+        // Also initialize Analytics Section charts
+        initAnalyticsCharts();
+    }
+
+    // --- SECURITY ANALYTICS SECTION ---
+    function initAnalyticsCharts() {
+        const ctxRadar = document.getElementById('analyticsRadarChart').getContext('2d');
+        radarChartInstance = new Chart(ctxRadar, {
+            type: 'radar',
+            data: {
+                labels: ['Network Security', 'Cloud Security', 'Endpoint Security', 'Application Security', 'Identity Security', 'Data Protection'],
+                datasets: [{
+                    label: 'Security Posture Index',
+                    data: [82, 78, 85, 74, 88, 80],
+                    backgroundColor: 'rgba(56, 189, 248, 0.2)',
+                    borderColor: '#38bdf8',
+                    pointBackgroundColor: '#38bdf8',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { labels: { color: '#94a3b8' } } },
+                scales: {
+                    r: {
+                        grid: { color: 'rgba(56, 189, 248, 0.15)' },
+                        angleLines: { color: 'rgba(56, 189, 248, 0.15)' },
+                        ticks: { color: '#94a3b8', backdropColor: 'transparent' }
+                    }
+                }
+            }
+        });
+
+        const ctxDoughnut = document.getElementById('analyticsDoughnutChart').getContext('2d');
+        doughnutChartInstance = new Chart(ctxDoughnut, {
+            type: 'doughnut',
+            data: {
+                labels: ['Critical Risk', 'High Risk', 'Medium Risk', 'Low Risk'],
+                datasets: [{
+                    data: [12, 24, 38, 18],
+                    backgroundColor: ['#ef4444', '#f97316', '#eab308', '#10b981'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8' } } },
+                cutout: '65%'
+            }
+        });
+    }
+
+    // --- REPORTS SECTION ---
+    function initReports() {
+        const grid = document.getElementById('reports-grid-container');
+        grid.innerHTML = reportsList.map(r => `
+            <div class="report-card">
+                <div>
+                    <h4 style="font-size: 1.05rem; margin-bottom: 0.4rem;"><i class="fa-solid fa-file-pdf" style="color: var(--accent-cyan); margin-right: 0.5rem;"></i>${r.title}</h4>
+                    <p style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4;">${r.desc}</p>
+                </div>
+                <button class="btn-primary-custom" onclick="generateReportAction('${r.title}')">Generate Report</button>
+            </div>
+        `).join('');
+    }
+
+    function generateReportAction(title) {
+        showToast(`Security report generated successfully: "${title}"`);
+    }
+
+    // --- SETTINGS SECTION & LOCALSTORAGE ---
+    function toggleDarkMode(isDark) {
+        if (isDark) {
+            document.body.classList.remove('light-mode');
+            localStorage.setItem('cyberguard_theme', 'dark');
+        } else {
+            document.body.classList.add('light-mode');
+            localStorage.setItem('cyberguard_theme', 'light');
+        }
+        showToast(`Theme updated successfully.`);
+    }
+
+    function toggleCompactSidebar(isCompact) {
+        if (isCompact) {
+            document.body.classList.add('compact-sidebar');
+            localStorage.setItem('cyberguard_sidebar', 'compact');
+        } else {
+            document.body.classList.remove('compact-sidebar');
+            localStorage.setItem('cyberguard_sidebar', 'full');
+        }
+    }
+
+    // Load saved settings on startup
+    window.addEventListener('load', () => {
+        const savedTheme = localStorage.getItem('cyberguard_theme');
+        if (savedTheme === 'light') {
+            document.body.classList.add('light-mode');
+            document.getElementById('setting-darkmode').checked = false;
+        }
+        const savedSidebar = localStorage.getItem('cyberguard_sidebar');
+        if (savedSidebar === 'compact') {
+            document.body.classList.add('compact-sidebar');
+            document.getElementById('setting-compactsidebar').checked = true;
+        }
+    });
+
+    // --- GLOBAL SEARCH ---
+    function initGlobalSearch() {
+        const input = document.getElementById('global-search-input');
+        const resultsBox = document.getElementById('global-search-results');
+
+        input.addEventListener('input', (e) => {
+            const q = e.target.value.toLowerCase().trim();
+            if (q.length === 0) {
+                resultsBox.style.display = 'none';
+                return;
+            }
+
+            let matches = [];
+            // Search Companies
+            companiesDB.forEach(c => {
+                if (c.name.toLowerCase().includes(q) || c.industry.toLowerCase().includes(q)) {
+                    matches.push({ type: 'Company', title: `${c.name} (${c.industry})`, action: () => { switchSection('company-intelligence'); openCompanyModal(c.name); } });
+                }
+            });
+            // Search Threats
+            threatIntelHubCards.forEach(t => {
+                if (t.title.toLowerCase().includes(q) || t.desc.toLowerCase().includes(q)) {
+                    matches.push({ type: 'Threat Intel', title: t.title, action: () => { switchSection('threat-intelligence'); } });
+                }
+            });
+            // Search Vulnerabilities
+            vulnerabilitiesDemo.forEach(v => {
+                if (v.cve.toLowerCase().includes(q) || v.tech.toLowerCase().includes(q)) {
+                    matches.push({ type: 'Vulnerability', title: `${v.cve} —${v.tech}`, action: () => { switchSection('vulnerabilities'); } });
+                }
+            });
+            // Search Reports
+            reportsList.forEach(r => {
+                if (r.title.toLowerCase().includes(q)) {
+                    matches.push({ type: 'Report', title: r.title, action: () => { switchSection('reports'); } });
+                }
+            });
+
+            if (matches.length === 0) {
+                resultsBox.innerHTML = `<div class="search-result-item" style="color: var(--text-muted);">No matching telemetry found</div>`;
+            } else {
+                resultsBox.innerHTML = matches.slice(0, 6).map(m => `
+                    <div class="search-result-item">
+                        <span style="font-size: 0.65rem; color: var(--accent-cyan); display: block; font-weight: 700;">${m.type}</span>
+                        <span>${m.title}</span>
+                    </div>
+                `).join('');
+
+                // Add click triggers
+                setTimeout(() => {
+                    const items = resultsBox.querySelectorAll('.search-result-item');
+                    items.forEach((item, idx) => {
+                        if (matches[idx]) {
+                            item.addEventListener('click', () => {
+                                matches[idx].action();
+                                resultsBox.style.display = 'none';
+                                input.value = '';
+                            });
+                        }
+                    });
+                }, 50);
+            }
+            resultsBox.style.display = 'block';
+        });
+
+        document.addEventListener('click', () => {
+            resultsBox.style.display = 'none';
+        });
+        input.addEventListener('click', (e) => e.stopPropagation());
+    }
+</script>
+
+</body>
+</html>
